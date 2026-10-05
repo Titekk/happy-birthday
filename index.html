@@ -1,4 +1,5 @@
-<html>
+<!DOCTYPE html>
+<html lang="pt-BR">
 
 <head>
     <title>Happy Birthday</title>
@@ -12,13 +13,12 @@
     <div class="container">
         <div class="row">
             <div class="loader">
-                <button id="play">Start</button>
+                <button id="play" class="golden-btn">Start</button>
             </div>
         </div>
     </div>
     <audio class="song" controls loop>
-        <source src="music.mp3">
-        </source>
+        <source src="music.mp3" type="audio/mpeg">
         Your browser isn't invited for super fun audio time.
     </audio>
     <canvas id="confetti"></canvas>
@@ -52,10 +52,10 @@
         </div>
         <img src="img/Balloon-Border.png" width="100%" class="balloon-border">
     </div>
+    <script src="https://unpkg.com/magic-snowflakes/dist/snowflakes.min.js"></script>
+    <script src="js/jquery.js"></script>
+    <script src="js/typed.min.js"></script>
+    <script src="js/script.js"></script>
 </body>
-<script src="https://unpkg.com/magic-snowflakes/dist/snowflakes.min.js"></script>
-<script src="js/jquery.js"></script>
-<script src="js/typed.min.js"></script>
-<script src="js/script.js"></script>
 
 </html>
