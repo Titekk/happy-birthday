@@ -1,0 +1,163 @@
+=====================================================================
+ RELATÓRIO DE ERROS — Projeto "Happy Birthday" (fix-errors)
+ Gerado em: 04/10/2026
+ Contexto: site de aniversário em HTML/CSS/JS (index.html, style.css,
+ js/script.js, "Happy Birthday.html")
+=====================================================================
+
+---------------------------------------------------------------------
+ 1. ERROS DE JAVASCRIPT (js/script.js)
+---------------------------------------------------------------------
+
+[JS-01] Linha 146 — Vector2.SqrDistance usa variável inexistente `z`
+    return (x * x + y * y + z * z);
+  -> `z` não está definido. Quando chamada (via Vector2.Distance),
+     lança ReferenceError: z is not defined.
+  Correção: return (x * x + y * y);
+
+[JS-02] Linha 158 — Vector2.ClampMagnitude chama método sem parênteses
+    var vecNorm = _vec0.Normalized;
+  -> Está referenciando a função, não executando. `vecNorm.x` fica
+     undefined e o resultado vira NaN.
+  Correção: var vecNorm = _vec0.Normalized();
+
+[JS-03] Linha 162 — Vector2.Sub carrega resíduo de código 3D
+    return new Vector2(_vec0.x - _vec1.x, _vec0.y - _vec1.y, _vec0.z - _vec1.z);
+  -> Vector2 é 2D; `_vec0.z` é undefined (NaN) e o 3º argumento é
+     ignorado pelo construtor. Funciona por acidente, mas é erro.
+  Correção: return new Vector2(_vec0.x - _vec1.x, _vec0.y - _vec1.y);
+
+[JS-04] Linha 97 — uso da vírgula em vez de ponto e vírgula
+    this.x = _x, this.y = _y;
+  -> Operador de sequência: funciona, mas é claramente um erro de
+     digitação e engana leitores.
+  Correção: this.x = _x; this.y = _y;
+
+[JS-05] Linha 369/422 — variável `confetti` usada antes de declarar e
+        dependência de hoisting
+    confetti = {};                    // linha 369 (sem var)
+    var confetti = new confetti.Context('confetti');  // linha 422
+  -> `confetti = {}` vira global implícita (ou depende do hoisting de
+     `var confetti`). Frágil e confuso; em modo estrito ('use strict')
+     a linha 369 lançaria ReferenceError.
+  Correção: declarar `var confettiObj = {}` antes e usar nome distinto
+  do construtor.
+
+[JS-06] Linha 399/404 — this.interval nunca inicializado no stop()
+    this.stop = function () { cAF(this.interval); }
+  -> `interval` local (linha 379) nunca é copiado para `this.interval`
+     até o update() rodar; a 1ª chamada de stop() passa undefined.
+  Correção: this.interval = interval; dentro de update(), e usar
+  this.interval também no callback do rAF.
+
+[JS-07] Linha 418 — callback do rAF usa o global em vez do contexto
+    this.interval = rAF(function () { confetti.update(); });
+  -> Depende da variável global/externa `confetti`; quebra se houver
+     mais de um canvas ou se o nome mudar.
+  Correção: usar uma referência capturada (ex.: self = this) e chamar
+  self.update();
+
+[JS-08] Linha 218 — ponto e vírgula ausente
+    this.pos.x += cos(...) * this.xSpeed * _dt
+  -> ASI pode mascarar erros; padronizar com ';'.
+
+[JS-09] Linha 276 — divisão por _dt sem guarda
+    dirP.Mul((delta / _dt) * this.velocityInherit);
+  -> Se _dt for 0 (frame duplicado), gera Infinity/NaN.
+  Correção: if (_dt > 0) { ... }
+
+[JS-10] Linha 1 — `new Snowflakes(...)` roda imediatamente
+  -> Se o CDN (unpkg) falhar ou estiver offline, todo o restante do
+     script (Typed, confete, botão Start) quebra, pois está no mesmo
+     arquivo sem try/catch.
+  Correção: envolver em try/catch e/ou verificar typeof Snowflakes.
+
+[JS-11] Linha 8 — console.log(c) deixado em produção
+  -> Debug esquecido; remover.
+
+[JS-12] Linha 22 — audio.play() sem tratamento de promessa
+  -> Navegadores podem rejeitar (autoplay policy); gerar
+     Uncaught (in promise). Correção: audio.play().catch(...)
+
+---------------------------------------------------------------------
+ 2. ERROS DE HTML
+---------------------------------------------------------------------
+
+[HTML-01] index.html — scripts (linhas 56-59) fora de <body>/<html>
+  -> <script> aparece depois de </body>; HTML inválido.
+  Correção: mover para antes de </body>.
+
+[HTML-02] index.html — ausência de <!DOCTYPE html>
+  -> Página renderiza em modo quirks.
+
+[HTML-03] "Happy Birthday.html" linhas 41 e 45 — id="nae" duplicado
+  -> IDs devem ser únicos; getElementById pega só o primeiro.
+  Correção: usar class ou alterar um dos IDs.
+
+[HTML-04] "Happy Birthday.html" linha 41 — typo "aniverśario"
+  -> Caractere 'ś' indevido. Correção: "aniversário".
+
+[HTML-05] index.html linha 20 — <source> sem atributo type
+  -> <source src="music.mp3"> deveria ser type="audio/mpeg";
+     além disso o fechamento </source> é desnecessário (tag void).
+
+[HTML-06] index.html — <html> sem atributo lang
+  -> Acessibilidade/SEO: <html lang="pt-BR">.
+
+---------------------------------------------------------------------
+ 3. ERROS DE CSS (style.css)
+---------------------------------------------------------------------
+
+[CSS-01] Linhas 8-9 — transform declarado duas vezes
+    transform: translateY(-50%);
+    transform: translateX(-50%);
+  -> A segunda sobrescreve a primeira; o botão não fica centralizado
+     verticalmente.
+  Correção: transform: translate(-50%, -50%);
+
+[CSS-02] Linhas 124-125 — mesmo problema em .cake
+    transform: translateY(-50%);
+    transform: translateX(-50%);
+  Correção: transform: translate(-50%, -50%);
+
+[CSS-03] Linha 11 — z-index fora da faixa de 32 bits
+    z-index: 9999999999999999999999;
+  -> Navegadores limitam a 2147483647; o valor é inválido/truncado.
+  Correção: usar um valor razoável, ex.: z-index: 9999;
+
+[CSS-04] Linhas 31-45 — seletores .golden-btn sem uso
+  -> Nenhuma classe .golden-btn existe no HTML; CSS morto.
+
+[CSS-05] "Happy Birthday_files/style.css" — url(back.png) quebrado
+  -> back.png não existe dentro de "Happy Birthday_files/" (está em
+     img/). Fundo da .loader não carrega nessa página.
+  Correção: url(../img/back.png) ou copiar a imagem.
+
+---------------------------------------------------------------------
+ 4. INCONSISTÊNCIAS ENTRE CÓPIAS
+---------------------------------------------------------------------
+
+[INC-01] js/script.js (linha 13) tem `$(".main").fadeOut(1);` e
+         fadeIn("slow") no clique, mas "Happy Birthday_files/script.js"
+         não tem — comportamentos diferentes entre as duas cópias.
+
+[INC-02] style.css (raiz) usa background: url(img/back.png) enquanto
+         "Happy Birthday_files/style.css" usa url(back.png) — a
+         segunda cópia está quebrada (ver CSS-05).
+
+[INC-03] Dois jQueries em js/ (jquery.js e jquery.min.js) e arquivos
+         não utilizados (wow.min.js, typed.min.js em alguns HTMLs) —
+         remover duplicatas para evitar conflitos de versão.
+
+[INC-04] Arquivo "update" na raiz contém comandos git com mensagem
+         "Hello World!" — arquivo de rascunho que não deveria estar
+         no deploy.
+
+---------------------------------------------------------------------
+ PRIORIDADE DE CORREÇÃO
+---------------------------------------------------------------------
+  Alta : JS-01, JS-02, JS-10, HTML-03, HTML-01, CSS-05
+  Média: JS-05, JS-06, JS-07, CSS-01, CSS-02, CSS-03, HTML-04
+  Baixa: JS-04, JS-08, JS-09, JS-11, JS-12, HTML-02, HTML-05,
+         HTML-06, CSS-04, INC-01..INC-04
+=====================================================================
