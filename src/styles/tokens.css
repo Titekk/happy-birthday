@@ -1,0 +1,28 @@
+/*
+ * Design tokens
+ * Paleta (references.txt):
+ *   ~20% vermelho  -> títulos e palavras de emoção        (meermohsin.me)
+ *   ~20% roxo      -> blocos de fundo, nunca texto pequeno (twitch.tv)
+ *   ~60% branco/bege -> resto do site                      (eloqwnt.com)
+ */
+:root {
+  --red: #990000;
+  --purple: #9146ff;
+  --beige: #f3ece2;
+  --beige-deep: #e8dfd2;
+  --white: #fafafa;
+  --ink: #1a1716;
+  --ink-soft: rgb(26 23 22 / 0.62);
+  --line: rgb(26 23 22 / 0.12);
+
+  /* Fontes: definidas por outro agente. Troque só estas variáveis. */
+  --font-display: Georgia, 'Times New Roman', serif;
+  --font-body: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+
+  --radius: 14px;
+  --radius-sm: 8px;
+  --gutter: clamp(16px, 4vw, 56px);
+  --section-space: clamp(96px, 16vh, 200px);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}

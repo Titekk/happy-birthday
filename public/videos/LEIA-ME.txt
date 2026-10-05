@@ -1,0 +1,15 @@
+VÍDEOS
+======
+
+Coloque aqui os vídeos curtos que aparecem nas faixas do footer (tocam como GIF:
+sem som, em loop):
+
+  01.mp4 ... 04.mp4
+
+Recomendações:
+  - MP4 (H.264), 3 a 8 segundos, até ~5 MB cada
+  - Pode remover o áudio — ele nunca toca
+  - Converter com ffmpeg:
+      ffmpeg -i entrada.mov -an -vf "scale=720:-2" -c:v libx264 -crf 26 -movflags +faststart 01.mp4
+
+Enquanto o arquivo não existir, o site mostra um bloco com o número.

@@ -1,0 +1,14 @@
+FOTOS
+=====
+
+Coloque aqui as fotos com estes nomes:
+
+  01.jpg ... 08.jpg  -> cards da galeria (na ordem de src/content.js)
+  09.jpg ... 14.jpg  -> faixas do footer (o footer também reaproveita 01-08)
+
+Recomendações:
+  - JPG, até ~1600px no lado maior, idealmente < 400 KB cada
+  - Fotos em pé (retrato) funcionam melhor nos cards (proporção 4:5)
+
+Quer outro nome ou formato (ex.: .webp)? Basta ajustar o caminho em src/content.js.
+Enquanto o arquivo não existir, o site mostra um bloco bege com o número.
